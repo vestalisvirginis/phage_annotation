@@ -1,0 +1,71 @@
+# --- Stage 1: Build Stage ---
+FROM python:3.11-slim AS build
+
+ENV PIP_ROOT_USER_ACTION=ignore
+ENV PIP_DISABLE_PIP_VERSION_CHECK=1
+
+# Install build dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    build-essential \
+    python3-dev \
+    wget \
+    infernal \
+    infernal-doc \
+    && rm -rf /var/lib/apt/lists/*
+
+# install non-python dependencies
+RUN mkdir -p /downloads
+WORKDIR /downloads
+RUN wget https://github.com/soedinglab/MMseqs2/releases/download/18-8cc5c/mmseqs-linux-avx2.tar.gz
+RUN wget https://github.com/UCSC-LoweLab/tRNAscan-SE/archive/refs/tags/v2.0.12.tar.gz
+
+RUN tar xvzf mmseqs-linux-*.tar.gz
+RUN tar -zxvf v2.0.12.tar.gz
+RUN rm *.tar.gz
+RUN mkdir -p /tools && mv /downloads/mmseqs* /tools/mmseqs
+
+WORKDIR /downloads/tRNAscan-SE-2.0.12
+
+RUN ./configure --prefix=/tools/tRNAscan-SE
+#./configure --prefix=/usr/local/bin/tRNAscan-SE
+RUN make && make install
+#PATH="$PATH:/usr/local/bin/tRNAscan-SE/bin"
+WORKDIR /tools/tRNAscan-SE/bin
+RUN for p in cmbuild cmcalibrate cmsearch cmscan smalign ; do ln -s /usr/bin/$p ; done
+
+# Upgrade pip and install libraries with no cache
+RUN pip install --upgrade --no-cache-dir pip
+
+# Install packages into a temporary directory
+RUN pip install --no-cache-dir --prefix=/install dagster-pipes polars toolz pharokka bcbio-gff biopython phanotate minced aragorn mash dnaapler pyrodigal pyrodigal-gv pycirclize alive-progress requests pyhmmer
+
+# --- Stage 2: Final Slim Runtime ---
+FROM python:3.11-slim AS runtime
+
+ENV PIP_ROOT_USER_ACTION=ignore
+ENV PIP_DISABLE_PIP_VERSION_CHECK=1
+
+# Parallel command
+RUN apt-get update && apt-get install -y \
+    parallel \
+    infernal \
+    perl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy installed packages from build stage
+COPY --from=build /install /usr/local
+COPY --from=build /tools /usr/local
+
+# Export PATH
+ENV PATH="/usr/local/mmseqs/bin/:$PATH"
+ENV PATH="/usr/local/tRNAscan-SE/bin/:$PATH"
+
+# Set working directory
+WORKDIR /app
+
+# Mount points
+VOLUME /scripts
+VOLUME /databases
+VOLUME /inputs
+VOLUME /outputs
