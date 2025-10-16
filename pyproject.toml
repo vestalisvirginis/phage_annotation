@@ -10,7 +10,6 @@ dependencies = [
     "dagster-pipes>=1.11.2",
     "dagster-webserver>=1.11.2",
     "toolz>=1.0.0",
-    "pharokka>=1.8.1",
 ]
 
 [project.optional-dependencies]
