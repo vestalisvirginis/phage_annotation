@@ -3,3 +3,10 @@ py311
 
 # folders
 temp/
+data/
+databases/
+dagster/
+
+# files
+
+.env
