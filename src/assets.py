@@ -4,6 +4,25 @@ from dagster_docker import PipesDockerClient
 
 import dagster as dg
 
+
+@dg.asset(
+    # check_specs=[
+    #     dg.AssetCheckSpec(
+    #         name="full_sequence",
+    #         description="Reports created for all sequences",
+    #         asset="fastqc_runner",
+    #         blocking=False,
+    #     )
+    # ],
+    kinds={"python"},
+)
+def fastqc_runner(
+    context: dg.AssetExecutionContext,
+) -> dg.Output[str]:
+    """Extraction of phage sequences based on given att sites"""
+
+    
+
 @dg.asset(
     # check_specs=[
     #     dg.AssetCheckSpec(
