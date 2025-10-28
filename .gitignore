@@ -6,6 +6,7 @@ temp/
 data/
 databases/
 dagster/
+phold_databases/
 
 # files
 

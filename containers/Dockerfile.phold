@@ -14,10 +14,9 @@ RUN mkdir -p /tools
 WORKDIR /tools
 
 # Download Foldseek
-RUN wget https://mmseqs.com/foldseek/foldseek-linux-avx2.tar.gz
-
+RUN wget https://github.com/steineggerlab/foldseek/releases/download/10-941cd33/foldseek-linux-gpu.tar.gz
 # Extract archives
-RUN tar xvzf foldseek-linux-avx2.tar.gz
+RUN tar xvzf foldseek-linux-gpu.tar.gz
 RUN rm *.tar.gz
 
 # Upgrade pip and install libraries with no cache
@@ -34,6 +33,7 @@ ENV PIP_DISABLE_PIP_VERSION_CHECK=1
 # Install runtime dependencies (libraries needed by compiled binaries)
 RUN apt-get update && apt-get install -y \
     parallel \
+    aria2 \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy installed packages from build stage

@@ -11,8 +11,8 @@ with open_dagster_pipes() as context:
 
     context.log.info("Pharokka: Started")
 
-    "pharokka.py -i /inputs/7_polished.fasta -o /outputs/phage_7_pha -d /databases/ -t 12 -p phage_7_pha -g phanotate --dnaapler"
-    "pharokka.py -i /inputs/7_polished.fasta -o /outputs/phage_7_gv -d /databases/ -t 12 -p phage_7_gv -g prodigal-gv --dnaapler"
+ #   "pharokka.py -i /inputs/22_polished.fasta -o /outputs/phage_22_pha -d /databases/ -t 12 -p phage_22_pha -g phanotate --dnaapler"
+#   "pharokka.py -i /inputs/22_polished.fasta -o /outputs/phage_22_gv -d /databases/ -t 12 -p phage_22_gv -g prodigal-gv --dnaapler"
 
     context.log.info("Pharokka: Completed")
 
@@ -27,5 +27,5 @@ with open_dagster_pipes() as context:
 #    12;156.1;124.8;reoriented
 #    22;156.91;125.64;reoriented
 
-"pharokka_plotter.py -i /inputs/3_polished.fasta -n phage_3_plot -o /outputs/plots/phage_3_gv --gff /outputs/phage_3_gv/phage_3_gv.gff -p phage_3_gv --interval 8000 --annotations 0.5 --dpi 900 --plot_title '${Bacillus}$ Phage Phage_3_gv'"
-pharokka_plotter.py -i /inputs/8_polished.fasta -o /outputs/phage_8_gv -n phage_8_gv_plot -p phage_8_gv --interval 5000 --annotations 1 --dpi 900 --plot_title '${Bacillus}$ Phage Phage_phage_8_gv'
+#"pharokka_plotter.py -i /inputs/3_polished.fasta -n phage_3_plot -o /outputs/plots/phage_3_gv --gff /outputs/phage_3_gv/phage_3_gv.gff -p phage_3_gv --interval 8000 --annotations 0.5 --dpi 900 --plot_title '${Bacillus}$ Phage Phage_3_gv'"
+pharokka_plotter.py -i /inputs/22_polished.fasta -o /outputs/phage_22_gv -n phage_22_gv_plot -p phage_22_gv --interval 5000 --annotations 1 --dpi 900 --plot_title '${Bacillus}$ Phage Phage_phage_22_gv'
